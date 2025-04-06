@@ -12,16 +12,13 @@ A Model Context Protocol (MCP) server for searching and downloading academic pap
 - [Features](#features)
 - [Installation](#installation)
   - [Quick Start](#quick-start)
+    - [Install Package](#install-package)
+    - [Configure Claude Desktop](#configure-claude-desktop)
   - [For Development](#for-development)
-- [Testing](#testing)
-- [Usage](#usage)
-  - [Running the Server](#running-the-server)
-  - [Using with Claude Desktop](#using-with-claude-desktop)
-  - [Example Commands](#example-commands)
-- [Deployment](#deployment)
-  - [Local Deployment](#local-deployment)
-  - [Cloud Deployment](#cloud-deployment)
+    - [Setup Environment](#setup-environment)
+    - [Install Dependencies](#install-dependencies)
 - [Contributing](#contributing)
+- [Demo](#demo)
 - [License](#license)
 
 ---
@@ -50,26 +47,30 @@ A Model Context Protocol (MCP) server for searching and downloading academic pap
 
 For users who want to quickly run the server:
 
-1. **Install with uv** (recommended):
+1. **Install Package**:
    ```bash
    uv add paper-search-mcp
    ```
-   OR with pip:
-   ```bash
-   pip install paper-search-mcp
-   ```
 
-2. **Run the Server**:
-   ```bash
-   uv run -m paper_search_mcp.server  # With uv
-   # OR
-   python -m paper_search_mcp.server  # With pip
+2. **Configure Claude Desktop**:
+   Add this configuration to `~/Library/Application Support/Claude/claude_desktop_config.json` (Mac) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+   ```json
+   {
+     "mcpServers": {
+       "paper_search_server": {
+         "command": "uv",
+         "args": [
+           "run",
+           "--directory",
+           "/path/to/your/paper-search-mcp",
+           "-m",
+           "paper_search_mcp.server"
+         ]
+       }
+     }
+   }
    ```
-
-3. **Verify Installation**:
-   ```bash
-   python -c "import paper_search_mcp; print(paper_search_mcp.__version__)"
-   ```
+   > Note: Replace `/path/to/your/paper-search-mcp` with your actual installation path.
 
 ### For Development
 
@@ -81,7 +82,7 @@ For developers who want to modify the code or contribute:
    curl -LsSf https://astral.sh/uv/install.sh | sh
    
    # Clone repository
-   git clone https://github.com/yourusername/paper-search-mcp.git
+   git clone https://github.com/openags/paper-search-mcp.git
    cd paper-search-mcp
    
    # Create and activate virtual environment
@@ -97,141 +98,8 @@ For developers who want to modify the code or contribute:
    # Add development dependencies (optional)
    uv add pytest flake8
    ```
-
-3. **Verify Setup**:
-   ```bash
-   # Check installation
-   python -c "import paper_search_mcp; print(paper_search_mcp.__version__)"
-   
-   # Run tests
-   python -m unittest discover tests
-   ```
-
 ---
 
-## Testing
-
-To ensure the server works correctly, run the included unit tests.
-
-1. **Activate Environment**:
-   ```bash
-   source .venv/bin/activate
-   ```
-
-2. **Run Tests**:
-   ```bash
-   python -m unittest discover tests
-   ```
-
-   - `test_arxiv.py`: Tests the `ArxivSearcher` class.
-   - `test_server.py`: Tests the MCP server tools (`search_arxiv` and `download_arxiv`).
-
-   Expected Output:
-   ```
-   ....
-   Ran 4 tests in X.XXXs
-   OK
-   ```
-
----
-
-## Usage
-
-### Running the Server
-
-Start the MCP server locally:
-```bash
-python -m paper_search_mcp.server
-```
-The server runs with stdio transport, ready to accept MCP client connections.
-
-### Using with Claude Desktop
-
-1. **Install Claude Desktop**:
-   Download from Anthropic's website and install the latest version.
-
-2. **Configure MCP Server**:
-   Open or create `~/Library/Application Support/Claude/claude_desktop_config.json` (Mac) or equivalent path (Windows/Linux). Add the server configuration:
-   ```json
-   {
-       "mcpServers": {
-           "paper_search_server": {
-               "command": "python",
-               "args": [
-                   "-m",
-                   "paper_search_mcp.server"
-               ]
-           }
-       }
-   }
-   ```
-   Save and restart Claude Desktop.
-
-3. **Verify Integration**:
-   In Claude Desktop, look for the hammer icon (🔨) in the UI. Click it to see available tools (`search_arxiv`, `download_arxiv`, etc.).
-
-### Example Commands
-
-- **Search Papers**:
-  ```
-  Search for "machine learning" papers on arXiv
-  ```
-  Returns a list of 10 papers (default `max_results`).
-
-- **Download a Paper**:
-  ```
-  Download arXiv paper 2106.12345
-  ```
-  Saves the PDF to `./downloads` (default path).
-
-- **Custom Search**:
-  ```
-  Search PubMed for "cancer treatment" with max_results=5
-  ```
-  Returns 5 papers from PubMed.
-
----
-
-## Deployment
-
-### Local Deployment
-
-For personal use or development:
-```bash
-nohup python -m paper_search_mcp.server &
-```
-Keeps the server running in the background. Check `nohup.out` for server output.
-
-### Cloud Deployment
-
-To deploy on a cloud service (e.g., AWS EC2):
-
-1. **Set Up EC2 Instance**:
-   - Launch an Ubuntu instance.
-   - Open port 22 (SSH) and ensure internet access.
-
-2. **Install Dependencies**:
-   ```bash
-   sudo apt update
-   sudo apt install python3 python3-pip git
-   git clone https://github.com/yourusername/paper-search-mcp.git
-   cd paper-search-mcp
-   pip3 install -e .
-   ```
-
-3. **Run Server**:
-   ```bash
-   python3 -m paper_search_mcp.server
-   ```
-
-   Use `screen` or `tmux` to keep it running after logout:
-   ```bash
-   screen
-   python3 -m paper_search_mcp.server
-   # Press Ctrl+A, then D to detach
-   ```
-
----
 
 ## Contributing
 
