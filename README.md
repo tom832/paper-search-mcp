@@ -3,6 +3,7 @@
 A Model Context Protocol (MCP) server for searching and downloading academic papers from multiple sources, including arXiv, PubMed, bioRxiv, and Sci-Hub (optional). Designed for seamless integration with large language models like Claude Desktop.
 
 ![PyPI](https://img.shields.io/pypi/v/paper-search-mcp.svg) ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
+[![smithery badge](https://smithery.ai/badge/@openags/paper-search-mcp)](https://smithery.ai/server/@openags/paper-search-mcp)
 
 ---
 
@@ -43,6 +44,14 @@ A Model Context Protocol (MCP) server for searching and downloading academic pap
 ## Installation
 
 `paper-search-mcp` can be installed using `uv` or `pip`. Below are two approaches: a quick start for immediate use and a detailed setup for development.
+
+### Installing via Smithery
+
+To install paper-search-mcp for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@openags/paper-search-mcp):
+
+```bash
+npx -y @smithery/cli install @openags/paper-search-mcp --client claude
+```
 
 ### Quick Start
 
