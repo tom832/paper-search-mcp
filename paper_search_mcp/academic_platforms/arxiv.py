@@ -15,6 +15,9 @@ class PaperSource:
     def download_pdf(self, paper_id: str, save_path: str) -> str:
         raise NotImplementedError
 
+    def read_paper(self, paper_id: str, save_path: str) -> str:
+        raise NotImplementedError
+
 class ArxivSearcher(PaperSource):
     """Searcher for arXiv papers"""
     BASE_URL = "http://export.arxiv.org/api/query"
