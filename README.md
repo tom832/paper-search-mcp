@@ -20,6 +20,7 @@ A Model Context Protocol (MCP) server for searching and downloading academic pap
 - [Contributing](#contributing)
 - [Demo](#demo)
 - [License](#license)
+- [TODO](#todo)
 
 ---
 
@@ -130,11 +131,32 @@ We welcome contributions! Here's how to get started:
 
 
 
+## TODO
+
+### Planned Academic Platforms
+- [ ] Google Scholar
+- [ ] Semantic Scholar
+- [ ] PubMed Central (PMC)
+- [ ] Science Direct
+- [ ] Springer Link
+- [ ] IEEE Xplore
+- [ ] ACM Digital Library
+- [ ] Web of Science
+- [ ] Scopus
+- [ ] JSTOR
+- [ ] ResearchGate
+- [ ] BioRxiv
+- [ ] MedRxiv
+- [ ] CORE
+- [ ] Microsoft Academic
+
+---
 
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 ---
+
 
 Happy researching with `paper-search-mcp`! If you encounter issues, open a GitHub issue.
