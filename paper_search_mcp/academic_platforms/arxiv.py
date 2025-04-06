@@ -4,6 +4,8 @@ from datetime import datetime
 import requests
 import feedparser
 from ..paper import Paper
+from PyPDF2 import PdfReader
+import os
 
 class PaperSource:
     """Abstract base class for paper sources"""
@@ -58,7 +60,35 @@ class ArxivSearcher(PaperSource):
         with open(output_file, 'wb') as f:
             f.write(response.content)
         return output_file
-    
+
+    def read_paper(self, paper_id: str, save_path: str = "./downloads") -> str:
+        """Read a paper and convert it to text format.
+        
+        Args:
+            paper_id: arXiv paper ID
+            save_path: Directory where the PDF is/will be saved
+            
+        Returns:
+            str: The extracted text content of the paper
+        """
+        # First ensure we have the PDF
+        pdf_path = f"{save_path}/{paper_id}.pdf"
+        if not os.path.exists(pdf_path):
+            pdf_path = self.download_pdf(paper_id, save_path)
+        
+        # Read the PDF
+        try:
+            reader = PdfReader(pdf_path)
+            text = ""
+            
+            # Extract text from each page
+            for page in reader.pages:
+                text += page.extract_text() + "\n"
+            
+            return text.strip()
+        except Exception as e:
+            print(f"Error reading PDF for paper {paper_id}: {e}")
+            return ""
 
 if __name__ == "__main__":
     # 测试 ArxivSearcher 的功能
@@ -82,9 +112,20 @@ if __name__ == "__main__":
         paper_id = papers[0].paper_id
         save_path = "./downloads"  # 确保此目录存在
         try:
-            import os
             os.makedirs(save_path, exist_ok=True)
             pdf_path = searcher.download_pdf(paper_id, save_path)
             print(f"PDF downloaded successfully: {pdf_path}")
         except Exception as e:
             print(f"Error during PDF download: {e}")
+
+    # 测试论文阅读功能
+    if papers:
+        print("\nTesting paper reading functionality...")
+        paper_id = papers[0].paper_id
+        try:
+            text_content = searcher.read_paper(paper_id)
+            print(f"\nFirst 500 characters of the paper content:")
+            print(text_content[:500] + "...")
+            print(f"\nTotal length of extracted text: {len(text_content)} characters")
+        except Exception as e:
+            print(f"Error during paper reading: {e}")

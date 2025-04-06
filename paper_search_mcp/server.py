@@ -53,6 +53,21 @@ async def download_arxiv(paper_id: str, save_path: str = "./downloads") -> str:
         return arxiv_searcher.download_pdf(paper_id, save_path)
 
 
+@mcp.tool()
+async def read_arxiv_paper(paper_id: str, save_path: str = "./downloads") -> str:
+    """Read and extract text content from an arXiv paper PDF.
+
+    Args:
+        paper_id: arXiv paper ID (e.g., '2106.12345').
+        save_path: Directory where the PDF is/will be saved (default: './downloads').
+    Returns:
+        str: The extracted text content of the paper.
+    """
+    try:
+        return arxiv_searcher.read_paper(paper_id, save_path)
+    except Exception as e:
+        print(f"Error reading paper {paper_id}: {e}")
+        return ""
 
 if __name__ == "__main__":
     mcp.run(transport="stdio")
