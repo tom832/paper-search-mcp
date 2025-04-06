@@ -143,7 +143,10 @@ We welcome contributions! Here's how to get started:
 ## TODO
 
 ### Planned Academic Platforms
-- [ ] Google Scholar
+- [√] arXiv
+- [√] PubMed
+- [√] bioRxiv/medRxiv
+- [√] Google Scholar
 - [ ] Semantic Scholar
 - [ ] PubMed Central (PMC)
 - [ ] Science Direct
@@ -154,8 +157,6 @@ We welcome contributions! Here's how to get started:
 - [ ] Scopus
 - [ ] JSTOR
 - [ ] ResearchGate
-- [ ] BioRxiv
-- [ ] MedRxiv
 - [ ] CORE
 - [ ] Microsoft Academic
 
