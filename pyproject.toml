@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "paper-search-mcp"
+version = "0.1.0"
+authors = [
+  { name = "P.S Zhang", email = "pengsongzhang96@gmail.com" },
+]
+description = "A MCP server for searching and downloading academic papers from multiple sources."
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = [
+    "requests",
+    "feedparser",
+    "fastmcp",
+    "mcp[cli]>=1.6.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["paper_search_mcp"]
