@@ -11,8 +11,8 @@ A Model Context Protocol (MCP) server for searching and downloading academic pap
 - [Overview](#overview)
 - [Features](#features)
 - [Installation](#installation)
-  - [Using pip](#using-pip)
-  - [Using uv](#using-uv)
+  - [Quick Start](#quick-start)
+  - [For Development](#for-development)
 - [Testing](#testing)
 - [Usage](#usage)
   - [Running the Server](#running-the-server)
@@ -44,65 +44,67 @@ A Model Context Protocol (MCP) server for searching and downloading academic pap
 
 ## Installation
 
-You can install `paper-search-mcp` using either `pip` or `uv`. Below are detailed instructions for both methods.
+`paper-search-mcp` can be installed using `uv` or `pip`. Below are two approaches: a quick start for immediate use and a detailed setup for development.
 
-### Using pip
+### Quick Start
 
-1. **Create a Virtual Environment using Conda**:
-  ```bash
-    conda create -n paper-search-mcp python=3.10
-    conda activate paper-search-mcp
-  ```
+For users who want to quickly run the server:
 
-2. **Clone the Repository**:
+1. **Install with uv** (recommended):
    ```bash
-   git clone https://github.com/yourusername/paper-search-mcp.git
-   cd paper-search-mcp
-   pip install -e .
+   uv add paper-search-mcp
+   ```
+   OR with pip:
+   ```bash
+   pip install paper-search-mcp
    ```
 
-3. **Install Dependencies**:
+2. **Run the Server**:
    ```bash
-   pip install -e .
+   uv run -m paper_search_mcp.server  # With uv
+   # OR
+   python -m paper_search_mcp.server  # With pip
    ```
 
-4. **Verify Installation**:
+3. **Verify Installation**:
    ```bash
    python -c "import paper_search_mcp; print(paper_search_mcp.__version__)"
    ```
-   Should output `0.1.0` (or your current version).
 
-### Using uv
+### For Development
 
-`uv` is a fast, modern Python package manager. Here's how to use it:
+For developers who want to modify the code or contribute:
 
-1. **Install uv (if not already installed)**:
+1. **Setup Environment**:
    ```bash
+   # Install uv if not installed
    curl -LsSf https://astral.sh/uv/install.sh | sh
-   ```
-   Restart your terminal after installation.
-
-2. **Clone the Repository**:
-   ```bash
+   
+   # Clone repository
    git clone https://github.com/yourusername/paper-search-mcp.git
    cd paper-search-mcp
-   ```
-
-3. **Set Up Project**:
-   ```bash
-   uv init  # Initialize uv project (if not already done)
-   uv venv  # Create virtual environment
+   
+   # Create and activate virtual environment
+   uv venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
-4. **Add Dependencies**:
+2. **Install Dependencies**:
    ```bash
+   # Install project in editable mode
    uv add -e .
+   
+   # Add development dependencies (optional)
+   uv add pytest flake8
    ```
 
-5. **Verify Installation**:
+3. **Verify Setup**:
    ```bash
-   uv run python -c "import paper_search_mcp; print(paper_search_mcp.__version__)"
+   # Check installation
+   python -c "import paper_search_mcp; print(paper_search_mcp.__version__)"
+   
+   # Run tests
+   python -m unittest discover tests
    ```
 
 ---
@@ -253,6 +255,13 @@ We welcome contributions! Here's how to get started:
    Push changes and create a PR on GitHub.
 
 ---
+
+
+## Demo
+<img src="docs\images\demo.png" alt="Demo" width="800">
+
+
+
 
 ## License
 
