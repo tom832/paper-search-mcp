@@ -145,7 +145,8 @@ We welcome contributions! Here's how to get started:
 ### Planned Academic Platforms
 - [√] arXiv
 - [√] PubMed
-- [√] bioRxiv/medRxiv
+- [√] bioRxiv
+- [√] medRxiv
 - [√] Google Scholar
 - [ ] Semantic Scholar
 - [ ] PubMed Central (PMC)

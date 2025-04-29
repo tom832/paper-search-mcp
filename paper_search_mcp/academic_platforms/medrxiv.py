@@ -16,9 +16,9 @@ class PaperSource:
     def read_paper(self, paper_id: str, save_path: str) -> str:
         raise NotImplementedError
 
-class BioRxivSearcher(PaperSource):
-    """Searcher for bioRxiv papers"""
-    BASE_URL = "https://api.biorxiv.org/details/biorxiv"
+class MedRxivSearcher(PaperSource):
+    """Searcher for medRxiv papers"""
+    BASE_URL = "https://api.biorxiv.org/details/medrxiv"
 
     def __init__(self):
         self.session = requests.Session()
@@ -28,10 +28,10 @@ class BioRxivSearcher(PaperSource):
 
     def search(self, query: str, max_results: int = 10, days: int = 30) -> List[Paper]:
         """
-        Search for papers on bioRxiv by category within the last N days.
+        Search for papers on medRxiv by category within the last N days.
 
         Args:
-            query: Category name to search for (e.g., "cell biology").
+            query: Category name to search for (e.g., "cardiovascular medicine").
             max_results: Maximum number of papers to return.
             days: Number of days to look back for papers.
 
@@ -67,17 +67,17 @@ class BioRxivSearcher(PaperSource):
                                 title=item['title'],
                                 authors=item['authors'].split('; '),
                                 abstract=item['abstract'],
-                                url=f"https://www.biorxiv.org/content/{item['doi']}v{item.get('version', '1')}",
-                                pdf_url=f"https://www.biorxiv.org/content/{item['doi']}v{item.get('version', '1')}.full.pdf",
+                                url=f"https://www.medrxiv.org/content/{item['doi']}v{item.get('version', '1')}",
+                                pdf_url=f"https://www.medrxiv.org/content/{item['doi']}v{item.get('version', '1')}.full.pdf",
                                 published_date=date,
                                 updated_date=date,
-                                source="biorxiv",
+                                source="medrxiv",
                                 categories=[item['category']],
                                 keywords=[],
                                 doi=item['doi']
                             ))
                         except Exception as e:
-                            print(f"Error parsing bioRxiv entry: {e}")
+                            print(f"Error parsing medRxiv entry: {e}")
                     if len(collection) < 100:
                         break  # No more results
                     cursor += 100
@@ -85,7 +85,7 @@ class BioRxivSearcher(PaperSource):
                 except requests.exceptions.RequestException as e:
                     tries += 1
                     if tries == self.max_retries:
-                        print(f"Failed to connect to bioRxiv API after {self.max_retries} attempts: {e}")
+                        print(f"Failed to connect to medRxiv API after {self.max_retries} attempts: {e}")
                         break
                     print(f"Attempt {tries} failed, retrying...")
             else:
@@ -98,7 +98,7 @@ class BioRxivSearcher(PaperSource):
 
     def download_pdf(self, paper_id: str, save_path: str) -> str:
         """
-        Download a PDF for a given paper ID from bioRxiv.
+        Download a PDF for a given paper ID from medRxiv.
 
         Args:
             paper_id: The DOI of the paper.
@@ -110,7 +110,7 @@ class BioRxivSearcher(PaperSource):
         if not paper_id:
             raise ValueError("Invalid paper_id: paper_id is empty")
 
-        pdf_url = f"https://www.biorxiv.org/content/{paper_id}v1.full.pdf"
+        pdf_url = f"https://www.medrxiv.org/content/{paper_id}v1.full.pdf"
         print(f"Attempting to download PDF from: {pdf_url}")
         tries = 0
         while tries < self.max_retries:
@@ -137,7 +137,7 @@ class BioRxivSearcher(PaperSource):
         Read a paper and convert it to text format.
         
         Args:
-            paper_id: bioRxiv DOI
+            paper_id: medRxiv DOI
             save_path: Directory where the PDF is/will be saved
             
         Returns:
