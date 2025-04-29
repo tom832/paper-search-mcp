@@ -51,7 +51,6 @@ class BioRxivSearcher(PaperSource):
             url = f"{self.BASE_URL}/{start_date}/{end_date}/{cursor}"
             if category:
                 url += f"?category={category}"
-            print(f"Querying URL: {url}")
             tries = 0
             while tries < self.max_retries:
                 try:
@@ -91,9 +90,7 @@ class BioRxivSearcher(PaperSource):
             else:
                 continue
             break
-        print(f"Found {len(papers)} papers for query '{query}':")
-        for i, paper in enumerate(papers, 1):
-            print(f"{i}. {paper.title} (ID: {paper.paper_id})")
+
         return papers[:max_results]
 
     def download_pdf(self, paper_id: str, save_path: str) -> str:
@@ -111,7 +108,6 @@ class BioRxivSearcher(PaperSource):
             raise ValueError("Invalid paper_id: paper_id is empty")
 
         pdf_url = f"https://www.biorxiv.org/content/{paper_id}v1.full.pdf"
-        print(f"Attempting to download PDF from: {pdf_url}")
         tries = 0
         while tries < self.max_retries:
             try:
