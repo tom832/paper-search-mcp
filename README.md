@@ -33,7 +33,7 @@ A Model Context Protocol (MCP) server for searching and downloading academic pap
 
 ## Features
 
-- **Multi-Source Support**: Search and download papers from arXiv, PubMed, bioRxiv, and Sci-Hub (optional).
+- **Multi-Source Support**: Search and download papers from arXiv, PubMed, bioRxiv, medRxiv, Google Scholar, and IACR ePrint Archive.
 - **Standardized Output**: Papers are returned in a consistent dictionary format via the `Paper` class.
 - **Asynchronous Tools**: Efficiently handles network requests using `httpx`.
 - **MCP Integration**: Compatible with MCP clients for LLM context enhancement.
@@ -58,6 +58,7 @@ npx -y @smithery/cli install @openags/paper-search-mcp --client claude
 For users who want to quickly run the server:
 
 1. **Install Package**:
+
    ```bash
    uv add paper-search-mcp
    ```
@@ -87,29 +88,31 @@ For users who want to quickly run the server:
 For developers who want to modify the code or contribute:
 
 1. **Setup Environment**:
+
    ```bash
    # Install uv if not installed
    curl -LsSf https://astral.sh/uv/install.sh | sh
-   
+
    # Clone repository
    git clone https://github.com/openags/paper-search-mcp.git
    cd paper-search-mcp
-   
+
    # Create and activate virtual environment
    uv venv
    source .venv/bin/activate  # On Windows: .venv\Scripts\activate
    ```
 
 2. **Install Dependencies**:
+
    ```bash
    # Install project in editable mode
    uv add -e .
-   
+
    # Add development dependencies (optional)
    uv add pytest flake8
    ```
----
 
+---
 
 ## Contributing
 
@@ -119,6 +122,7 @@ We welcome contributions! Here's how to get started:
    Click "Fork" on GitHub.
 
 2. **Clone and Set Up**:
+
    ```bash
    git clone https://github.com/yourusername/paper-search-mcp.git
    cd paper-search-mcp
@@ -126,6 +130,7 @@ We welcome contributions! Here's how to get started:
    ```
 
 3. **Make Changes**:
+
    - Add new platforms in `academic_platforms/`.
    - Update tests in `tests/`.
 
@@ -134,20 +139,20 @@ We welcome contributions! Here's how to get started:
 
 ---
 
-
 ## Demo
+
 <img src="docs\images\demo.png" alt="Demo" width="800">
-
-
 
 ## TODO
 
 ### Planned Academic Platforms
+
 - [√] arXiv
 - [√] PubMed
 - [√] bioRxiv
 - [√] medRxiv
 - [√] Google Scholar
+- [√] IACR ePrint Archive
 - [ ] Semantic Scholar
 - [ ] PubMed Central (PMC)
 - [ ] Science Direct
@@ -168,6 +173,5 @@ We welcome contributions! Here's how to get started:
 This project is licensed under the MIT License. See the LICENSE file for details.
 
 ---
-
 
 Happy researching with `paper-search-mcp`! If you encounter issues, open a GitHub issue.
