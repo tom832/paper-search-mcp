@@ -13,6 +13,9 @@ class PaperSource:
     """Abstract base class for paper sources"""
     def search(self, query: str, **kwargs) -> List[Paper]:
         raise NotImplementedError
+    
+    def advanced_search(self, query: str, **kwargs) -> List[Paper]:
+        raise NotImplementedError
 
     def download_pdf(self, paper_id: str, save_path: str) -> str:
         raise NotImplementedError
@@ -137,6 +140,73 @@ class GoogleScholarSearcher(PaperSource):
 
             except Exception as e:
                 logger.error(f"Search error: {e}")
+                break
+
+        return papers[:max_results]
+
+    def advanced_search(self, query: str, author: str = None, year_range: tuple = None, max_results: int = 10) -> List[Paper]:
+        """
+        Search Google Scholar with advanced filters (author, year range)
+        
+        Parameters:
+        query (str): The search query (e.g., paper title or topic)
+        author (str): The author's name to filter the results (optional)
+        year_range (tuple): A tuple (start_year, end_year) to filter by publication year (optional)
+        max_results (int): Maximum number of results to retrieve
+        
+        Returns:
+        List[Paper]: A list of Paper objects containing search results
+        """
+        papers = []
+        start = 0
+        results_per_page = min(10, max_results)
+
+        while len(papers) < max_results:
+            try:
+                # Construct search parameters
+                params = {
+                    'q': query,
+                    'start': start,
+                    'hl': 'en',
+                    'as_sdt': '0,5'  # Include articles and citations
+                }
+                
+                # Add advanced search parameters
+                if author:
+                    params['as_auth'] = author
+                if year_range:
+                    start_year, end_year = year_range
+                    params['as_ylo'] = start_year  # Start year
+                    params['as_yhi'] = end_year    # End year
+
+                # Make request with random delay
+                time.sleep(random.uniform(1.0, 3.0))
+                response = self.session.get(self.SCHOLAR_URL, params=params)
+                
+                if response.status_code != 200:
+                    logger.error(f"Advanced search failed with status {response.status_code}")
+                    break
+
+                # Parse results
+                soup = BeautifulSoup(response.text, 'html.parser')
+                results = soup.find_all('div', class_='gs_ri')
+
+                if not results:
+                    break
+
+                # Process each result
+                for item in results:
+                    if len(papers) >= max_results:
+                        break
+                        
+                    paper = self._parse_paper(item)
+                    if paper:
+                        papers.append(paper)
+
+                start += results_per_page
+
+            except Exception as e:
+                logger.error(f"Advanced search error: {e}")
                 break
 
         return papers[:max_results]

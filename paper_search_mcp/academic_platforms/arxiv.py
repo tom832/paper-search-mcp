@@ -4,7 +4,7 @@ from datetime import datetime
 import requests
 import feedparser
 from ..paper import Paper
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 import os
 
 class PaperSource:
@@ -75,8 +75,10 @@ class ArxivSearcher(PaperSource):
             str: The extracted text content of the paper
         """
         # First ensure we have the PDF
+        temporary_download = False
         pdf_path = f"{save_path}/{paper_id}.pdf"
         if not os.path.exists(pdf_path):
+            temporary_download = True
             pdf_path = self.download_pdf(paper_id, save_path)
         
         # Read the PDF
@@ -92,6 +94,10 @@ class ArxivSearcher(PaperSource):
         except Exception as e:
             print(f"Error reading PDF for paper {paper_id}: {e}")
             return ""
+        finally:
+            # Clean up the temporary file if we downloaded it
+            if temporary_download and os.path.exists(pdf_path):
+                os.remove(pdf_path)
 
 if __name__ == "__main__":
     # 测试 ArxivSearcher 的功能

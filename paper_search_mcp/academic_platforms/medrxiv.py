@@ -3,7 +3,7 @@ import requests
 import os
 from datetime import datetime, timedelta
 from ..paper import Paper
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 
 class PaperSource:
     """Abstract base class for paper sources"""
@@ -140,8 +140,10 @@ class MedRxivSearcher(PaperSource):
         Returns:
             str: The extracted text content of the paper
         """
+        temporary_download = False
         pdf_path = f"{save_path}/{paper_id.replace('/', '_')}.pdf"
         if not os.path.exists(pdf_path):
+            temporary_download = True
             pdf_path = self.download_pdf(paper_id, save_path)
         
         try:
@@ -153,3 +155,7 @@ class MedRxivSearcher(PaperSource):
         except Exception as e:
             print(f"Error reading PDF for paper {paper_id}: {e}")
             return ""
+        finally:
+            # Clean up the temporary file if we downloaded it
+            if temporary_download and os.path.exists(pdf_path):
+                os.remove(pdf_path)

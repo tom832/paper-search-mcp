@@ -6,7 +6,7 @@ import time
 import random
 from ..paper import Paper
 import logging
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 import os
 import re
 
@@ -344,8 +344,11 @@ class SemanticSearcher(PaperSource):
             os.makedirs(save_path, exist_ok=True)
 
             # Save the PDF
+            temporary_download = False
             filename = f"semantic_{paper_id.replace('/', '_')}.pdf"
             pdf_path = os.path.join(save_path, filename)
+            if not os.path.exists(pdf_path):
+                temporary_download = True
 
             with open(pdf_path, "wb") as f:
                 f.write(pdf_response.content)
@@ -387,6 +390,10 @@ class SemanticSearcher(PaperSource):
         except Exception as e:
             logger.error(f"Read paper error: {e}")
             return f"Error reading paper: {e}"
+        finally:
+            # Clean up the temporary file if we downloaded it
+            if temporary_download and os.path.exists(pdf_path):
+                os.remove(pdf_path)
 
     def get_paper_details(self, paper_id: str) -> Optional[Paper]:
         """

@@ -6,7 +6,7 @@ import time
 import random
 from ..paper import Paper
 import logging
-from PyPDF2 import PdfReader
+from pypdf import PdfReader
 import os
 
 logger = logging.getLogger(__name__)
@@ -255,8 +255,11 @@ class IACRSearcher(PaperSource):
             os.makedirs(save_path, exist_ok=True)
 
             # Save the PDF
+            temporary_download = False
             filename = f"iacr_{paper_id.replace('/', '_')}.pdf"
             pdf_path = os.path.join(save_path, filename)
+            if not os.path.exists(pdf_path):
+                temporary_download = True
 
             with open(pdf_path, "wb") as f:
                 f.write(pdf_response.content)
@@ -298,6 +301,10 @@ class IACRSearcher(PaperSource):
         except Exception as e:
             logger.error(f"Read paper error: {e}")
             return f"Error reading paper: {e}"
+        finally:
+            # Clean up the temporary file if we downloaded it
+            if temporary_download and os.path.exists(pdf_path):
+                os.remove(pdf_path)
 
     def get_paper_details(self, paper_id: str) -> Optional[Paper]:
         """
