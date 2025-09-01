@@ -1,6 +1,6 @@
 # Paper Search MCP
 
-A Model Context Protocol (MCP) server for searching and downloading academic papers from multiple sources, including arXiv, PubMed, bioRxiv, and Sci-Hub (optional). Designed for seamless integration with large language models like Claude Desktop.
+A Model Context Protocol (MCP) server for searching and downloading academic papers from multiple sources, including arXiv, PubMed, bioRxiv, and Sci-Hub (optional). Features **🔐 API Key Authentication** ✅ and designed for seamless integration with large language models like Claude Desktop.
 
 ![PyPI](https://img.shields.io/pypi/v/paper-search-mcp.svg) ![License](https://img.shields.io/badge/license-MIT-blue.svg) ![Python](https://img.shields.io/badge/python-3.10+-blue.svg)
 [![smithery badge](https://smithery.ai/badge/@openags/paper-search-mcp)](https://smithery.ai/server/@openags/paper-search-mcp)
@@ -18,6 +18,7 @@ A Model Context Protocol (MCP) server for searching and downloading academic pap
   - [For Development](#for-development)
     - [Setup Environment](#setup-environment)
     - [Install Dependencies](#install-dependencies)
+- [API Authentication](#api-authentication)
 - [Contributing](#contributing)
 - [Demo](#demo)
 - [License](#license)
@@ -37,6 +38,7 @@ A Model Context Protocol (MCP) server for searching and downloading academic pap
 - **Standardized Output**: Papers are returned in a consistent dictionary format via the `Paper` class.
 - **Asynchronous Tools**: Efficiently handles network requests using `httpx`.
 - **MCP Integration**: Compatible with MCP clients for LLM context enhancement.
+- **🔐 API Key Authentication**: ✅ **WORKING** - Secure access control with configurable API key authentication using FastMCP's built-in middleware.
 - **Extensible Design**: Easily add new academic platforms by extending the `academic_platforms` module.
 
 ---
@@ -116,6 +118,20 @@ For developers who want to modify the code or contribute:
    ```
 
 ---
+
+## Authentication
+
+```bash
+# 1. Start server without authentication
+cd /home/zxhuang/mcp-agent/paper-search-mcp
+source .venv/bin/activate
+python -m paper_search_mcp.server
+
+# 2. Test with authentication (Ctrl+C to stop server, then restart)
+export PAPER_SEARCH_API_KEY="test-key-123"
+python -m paper_search_mcp.server
+
+```
 
 ## Contributing
 

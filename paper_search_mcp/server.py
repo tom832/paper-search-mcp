@@ -1,7 +1,10 @@
 # paper_search_mcp/server.py
 from typing import List, Dict, Optional
 import httpx
+import os
 from mcp.server.fastmcp import FastMCP
+from mcp.server.auth.settings import AuthSettings
+from mcp.server.auth.provider import ProviderTokenVerifier
 from .academic_platforms.arxiv import ArxivSearcher
 from .academic_platforms.pubmed import PubMedSearcher
 from .academic_platforms.biorxiv import BioRxivSearcher
@@ -11,12 +14,53 @@ from .academic_platforms.iacr import IACRSearcher
 from .academic_platforms.semantic import SemanticSearcher
 from .academic_platforms.hub import SciHubSearcher
 
-# Initialize MCP server
+# Simple token verifier for API key authentication
+from mcp.server.auth.provider import AccessToken
+from dotenv import load_dotenv
+
+class SimpleTokenVerifier:
+    """Simple token verifier that checks API keys."""
+
+    def __init__(self, api_key: str):
+        self.api_key = api_key
+
+    async def verify_token(self, token: str) -> AccessToken | None:
+        """Verify API key token."""
+        if token == self.api_key:
+            return AccessToken(
+                token=token,
+                client_id="paper-search-client",
+                scopes=["read", "write"],
+                resource="http://localhost:18001"
+            )
+        return None
+
+# Get API key from environment variable
+load_dotenv()
+API_KEY = os.getenv("PAPER_SEARCH_API_KEY")
+auth_settings = None
+token_verifier = None
+
+if API_KEY:
+    print(f"✓ API Key authentication enabled")
+    auth_settings = AuthSettings(
+        issuer_url="http://localhost:18001",
+        resource_server_url="http://localhost:18001",
+        service_documentation_url="http://localhost:18001",
+        required_scopes=["read", "write"]
+    )
+    token_verifier = SimpleTokenVerifier(API_KEY)
+else:
+    print("⚠ API Key authentication disabled (set PAPER_SEARCH_API_KEY environment variable to enable)")
+
+# Initialize MCP server with authentication
 mcp = FastMCP(
     name="science-search",
-    host="localhost",
+    host="0.0.0.0",
     port=18001,
     streamable_http_path="/",
+    auth=auth_settings,
+    token_verifier=token_verifier,
 )
 
 # Instances of searchers
@@ -490,4 +534,15 @@ async def read_scihub_paper(doi: str, save_path: str = "./downloads") -> str:
 
 
 if __name__ == "__main__":
+    print("Starting Paper Search MCP Server...")
+    if API_KEY:
+        print("✓ API Key authentication enabled")
+        print("  To authenticate, use Authorization: Bearer <your-api-key>")
+        print(f"  MCP endpoint available at: http://localhost:18001/")
+    else:
+        print("⚠ API Key authentication disabled (set PAPER_SEARCH_API_KEY environment variable to enable)")
+        print(f"  MCP endpoint available at: http://localhost:18001/")
+    print(f"Server will be available at: http://localhost:18001/")
+
+    # Use FastMCP's built-in run method
     mcp.run(transport="streamable-http")
